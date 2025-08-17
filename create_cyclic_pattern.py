@@ -1,4 +1,5 @@
 import argparse
+import string
 
 def create_cyclic_pattern(input_charset: str, num_patterns: int, pattern_length: int) -> list[str]:
     """
@@ -17,85 +18,75 @@ def create_cyclic_pattern(input_charset: str, num_patterns: int, pattern_length:
 
     Returns:
         A list of strings, where each string is a created pattern.
-        Returns an empty list if the input_charset is empty.
-
-    Example:
-        >>> create_cyclic_pattern("AB", 5, 4)
-        ['AAAA', 'AAAB', 'AABA', 'AABB', 'ABAA']
-        >>> create_cyclic_pattern("012", 4, 2)
-        ['00', '01', '02', '10']
+        Returns an empty list if input validation fails.
     """
     # --- Input Validation ---
     if not input_charset:
-        print("Warning: input_charset cannot be empty.")
+        print("Error: Character set cannot be empty.")
         return []
     if num_patterns <= 0:
-        print("Warning: num_patterns must be a positive integer.")
+        print("Error: Number of patterns must be a positive integer.")
         return []
     if pattern_length <= 0:
-        print("Warning: pattern_length must be a positive integer.")
+        print("Error: Pattern length must be a positive integer.")
         return []
 
     # --- Initialization ---
     base = len(input_charset)
     # This list holds the indices for the characters in the current pattern.
-    # It's like the digits of a number. We start at all zeros (e.g., [0, 0, 0, 0]).
+    # We start at all zeros (e.g., [0, 0, 0, 0] for 'AAAA').
     indices = [0] * pattern_length
     created_patterns = []
 
     # --- Pattern Generation Loop ---
     for _ in range(num_patterns):
         # 1. Build the current pattern string from the indices.
-        # We use a list comprehension and join for efficiency.
         current_pattern = "".join([input_charset[i] for i in indices])
         created_patterns.append(current_pattern)
 
-        # 2. Increment the indices for the next pattern (like counting).
-        # We start from the rightmost "digit" (the end of the list).
+        # 2. Increment the indices for the next pattern (like base-26 counting).
+        # Start from the rightmost "digit".
         for i in range(pattern_length - 1, -1, -1):
-            # Increment the current index
             indices[i] += 1
-
-            # Check if we need to "carry over" to the next digit.
+            # If the index is still within the bounds of our charset,
+            # we're done incrementing for this pattern.
             if indices[i] < base:
-                # If the index is still within the bounds of our charset,
-                # we're done incrementing for this pattern.
                 break
+            # Otherwise, reset this index to 0 and carry over to the left.
             else:
-                # If we've exceeded the base, reset this index to 0
-                # and the loop will continue to the next digit to the left.
                 indices[i] = 0
 
     return created_patterns
 
 # --- Command-Line Interface ---
 if __name__ == '__main__':
-    # Set up the argument parser to handle command-line inputs.
     parser = argparse.ArgumentParser(
-        description="create the first pattern of a cyclic sequence. \n"
-                    "Example usage: python your_script_name.py ABC 4"
+        description="create a sequence of cyclic patterns using the alphabet.\n"
+                    "Example usage: python your_script_name.py 3 4"
     )
     parser.add_argument(
-        "input_charset",
-        type=str,
-        help="A string of unique characters to use for the pattern (e.g., 'ABC')."
+        "num_patterns",
+        type=int,
+        help="The total number of patterns to create."
     )
     parser.add_argument(
         "pattern_length",
         type=int,
-        help="The fixed length of the pattern."
+        help="The fixed length of each pattern."
     )
 
     args = parser.parse_args()
 
-    # To output only the 'AAAA' style pattern, we call the main function
-    # asking for just one pattern.
-    first_pattern_list = create_cyclic_pattern(
-        input_charset=args.input_charset,
-        num_patterns=1,
+    # The character set is now fixed to the uppercase alphabet.
+    alphabet_charset = string.ascii_uppercase
+
+    # create the requested number of patterns.
+    patterns = create_cyclic_pattern(
+        input_charset=alphabet_charset,
+        num_patterns=args.num_patterns,
         pattern_length=args.pattern_length
     )
 
-    # The function returns a list; we print the first (and only) element.
-    if first_pattern_list:
-        print(first_pattern_list[0])
+    # Print the resulting patterns on a single line, separated by spaces.
+    if patterns:
+        print(" ".join(patterns))
