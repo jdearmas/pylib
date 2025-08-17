@@ -1,3 +1,5 @@
+import argparse
+
 def create_cyclic_pattern(input_charset: str, num_patterns: int, pattern_length: int) -> list[str]:
     """
     creates a series of cyclic patterns based on an input character set.
@@ -63,33 +65,37 @@ def create_cyclic_pattern(input_charset: str, num_patterns: int, pattern_length:
                 # If we've exceeded the base, reset this index to 0
                 # and the loop will continue to the next digit to the left.
                 indices[i] = 0
-                # If we've carried over from the very first digit (i == 0),
-                # it means we have wrapped around the maximum possible pattern.
-                # We can handle this case if needed, but for now, it just wraps.
 
     return created_patterns
 
-# --- Example Usage ---
+# --- Command-Line Interface ---
 if __name__ == '__main__':
-    # Recreate the example from the prompt.
-    # We'll assume the input character set is the uppercase alphabet.
-    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    example_patterns = create_cyclic_pattern(alphabet, 2, 4)
-    print(f"Example from prompt ('{alphabet}', 2, 4):")
-    print(example_patterns)
-    print("-" * 20)
+    # Set up the argument parser to handle command-line inputs.
+    parser = argparse.ArgumentParser(
+        description="create the first pattern of a cyclic sequence. \n"
+                    "Example usage: python your_script_name.py ABC 4"
+    )
+    parser.add_argument(
+        "input_charset",
+        type=str,
+        help="A string of unique characters to use for the pattern (e.g., 'ABC')."
+    )
+    parser.add_argument(
+        "pattern_length",
+        type=int,
+        help="The fixed length of the pattern."
+    )
 
-    # Another example with a smaller character set.
-    binary_charset = "01"
-    binary_patterns = create_cyclic_pattern(binary_charset, 8, 4)
-    print(f"Binary example ('{binary_charset}', 8, 4):")
-    print(binary_patterns)
-    print("-" * 20)
-    
-    # An example with more "digits".
-    hex_charset = "0123456789ABCDEF"
-    hex_patterns = create_cyclic_pattern(hex_charset, 20, 2)
-    print(f"Hexadecimal example ('{hex_charset}', 20, 2):")
-    print(hex_patterns)
-    print("-" * 20)
+    args = parser.parse_args()
 
+    # To output only the 'AAAA' style pattern, we call the main function
+    # asking for just one pattern.
+    first_pattern_list = create_cyclic_pattern(
+        input_charset=args.input_charset,
+        num_patterns=1,
+        pattern_length=args.pattern_length
+    )
+
+    # The function returns a list; we print the first (and only) element.
+    if first_pattern_list:
+        print(first_pattern_list[0])
