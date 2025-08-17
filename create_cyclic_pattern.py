@@ -1,6 +1,6 @@
 def create_cyclic_pattern(input_charset: str, num_patterns: int, pattern_length: int) -> list[str]:
     """
-    Generates a series of cyclic patterns based on an input character set.
+    creates a series of cyclic patterns based on an input character set.
 
     This function creates patterns by treating the characters in `input_charset`
     as digits in a custom base system. It starts with the first character
@@ -10,17 +10,17 @@ def create_cyclic_pattern(input_charset: str, num_patterns: int, pattern_length:
     Args:
         input_charset: A string containing the unique characters to use for
                        generating patterns (e.g., "ABC", "01").
-        num_patterns: The total number of patterns to generate.
-        pattern_length: The fixed length of each generated pattern.
+        num_patterns: The total number of patterns to create.
+        pattern_length: The fixed length of each created pattern.
 
     Returns:
-        A list of strings, where each string is a generated pattern.
+        A list of strings, where each string is a created pattern.
         Returns an empty list if the input_charset is empty.
 
     Example:
-        >>> generate_cyclic_pattern("AB", 5, 4)
+        >>> create_cyclic_pattern("AB", 5, 4)
         ['AAAA', 'AAAB', 'AABA', 'AABB', 'ABAA']
-        >>> generate_cyclic_pattern("012", 4, 2)
+        >>> create_cyclic_pattern("012", 4, 2)
         ['00', '01', '02', '10']
     """
     # --- Input Validation ---
@@ -39,14 +39,14 @@ def create_cyclic_pattern(input_charset: str, num_patterns: int, pattern_length:
     # This list holds the indices for the characters in the current pattern.
     # It's like the digits of a number. We start at all zeros (e.g., [0, 0, 0, 0]).
     indices = [0] * pattern_length
-    generated_patterns = []
+    created_patterns = []
 
     # --- Pattern Generation Loop ---
     for _ in range(num_patterns):
         # 1. Build the current pattern string from the indices.
         # We use a list comprehension and join for efficiency.
         current_pattern = "".join([input_charset[i] for i in indices])
-        generated_patterns.append(current_pattern)
+        created_patterns.append(current_pattern)
 
         # 2. Increment the indices for the next pattern (like counting).
         # We start from the rightmost "digit" (the end of the list).
@@ -67,7 +67,7 @@ def create_cyclic_pattern(input_charset: str, num_patterns: int, pattern_length:
                 # it means we have wrapped around the maximum possible pattern.
                 # We can handle this case if needed, but for now, it just wraps.
 
-    return generated_patterns
+    return created_patterns
 
 # --- Example Usage ---
 if __name__ == '__main__':
@@ -81,14 +81,14 @@ if __name__ == '__main__':
 
     # Another example with a smaller character set.
     binary_charset = "01"
-    binary_patterns = generate_cyclic_pattern(binary_charset, 8, 4)
+    binary_patterns = create_cyclic_pattern(binary_charset, 8, 4)
     print(f"Binary example ('{binary_charset}', 8, 4):")
     print(binary_patterns)
     print("-" * 20)
     
     # An example with more "digits".
     hex_charset = "0123456789ABCDEF"
-    hex_patterns = generate_cyclic_pattern(hex_charset, 20, 2)
+    hex_patterns = create_cyclic_pattern(hex_charset, 20, 2)
     print(f"Hexadecimal example ('{hex_charset}', 20, 2):")
     print(hex_patterns)
     print("-" * 20)
