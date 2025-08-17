@@ -8,7 +8,7 @@ RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources
 
 # Update the package lists from the new archive source and install build-essential
 # The -y flag automatically answers "yes" to any prompts
-RUN apt-get update && apt-get install -y build-essential gdb curl
+RUN apt-get update && apt-get install -y build-essential gdb curl wget
 
 RUN curl -qsL 'https://install.pwndbg.re' | sh -s -- -t pwndbg-gdb
 # Set the default command to execute when the container starts
